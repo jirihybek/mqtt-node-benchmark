@@ -1,6 +1,6 @@
 # mqtt-node-benchmark
 
-CLI utilities to run MQTT benchmarks via Node.js.
+CLI utility to run MQTT benchmarks via Node.js.
 
 ## Usage
 

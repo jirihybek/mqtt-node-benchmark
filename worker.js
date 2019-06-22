@@ -110,7 +110,7 @@ async function startConnection(params, scriptHandler, index) {
 					try {
 						
 						const msg = scriptHandler ? scriptHandler(params.msg) : params.msg;
-						await publish(client, params.topic, msg instanceof Buffer ? msg : new Buffer(msg), params.qos);
+						await publish(client, params.topic, msg instanceof Buffer ? msg : new Buffer(String(msg)), params.qos);
 
 						msgSent++;
 						
