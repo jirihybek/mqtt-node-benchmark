@@ -156,7 +156,7 @@ async function start(args) {
 			action: "publish",
 			server: args.server,
 			topic: args.topic,
-			message: args.message,
+			msg: args.msg,
 			qos: args.qos,
 			script: args.script,
 			connections: Math.floor(args.pub_connections / args.pub_threads),
