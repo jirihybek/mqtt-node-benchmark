@@ -1,0 +1,22 @@
+{
+  "name": "mqtt-node-benchmark",
+  "version": "1.0.0",
+  "description": "MQTT benchmarking tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mqtt",
+    "broker",
+    "benchmark",
+    "performance",
+    "testing"
+  ],
+  "author": "Jiri Hybek <jiri@hybek.cz>",
+  "license": "MIT",
+  "dependencies": {
+    "argparse": "^1.0.10",
+    "mqtt": "^3.0.0"
+  }
+}
