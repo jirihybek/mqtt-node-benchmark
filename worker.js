@@ -59,11 +59,16 @@ async function wait(timeout) {
  */
 async function startConnection(params, scriptHandler, index) {
 
-	return new Promise((resolve, _reject) => {
+	return new Promise((resolve, reject) => {
 
 		console.log("Opening connection #%s:%d", params.threadId, index);
 
-		const client = mqtt.connect(params.server, {
+		const server = scriptHandler && scriptHandler.getServer ? scriptHandler.getServer(params) : params.server;
+
+		if (!server)
+			return reject(new Error("Server must be specified as a parameter or via custom script #getServer() function."));
+
+		const client = mqtt.connect(server, {
 			protocolVersion: 3
 		});
 
@@ -109,9 +114,17 @@ async function startConnection(params, scriptHandler, index) {
 
 					try {
 						
-						const msg = scriptHandler ? scriptHandler(params.msg) : params.msg;
+						const msg = scriptHandler && scriptHandler.getMessage ? scriptHandler.getMessage(params) : {
+							topic: params.topic,
+							payload: params.msg,
+							qos: params.qos
+						};
+
+						if (!msg || !msg.topic || !msg.payload )
+							throw new Error("Topic and payload must be specified as a parameter or via custom script #getMessage() function.");
+						
 						//console.log(String(msg));
-						await publish(client, params.topic, msg instanceof Buffer ? msg : new Buffer(String(msg)), params.qos);
+						await publish(client, msg.topic, msg.payload instanceof Buffer ? msg.payload : new Buffer(String(msg.payload)), msg.qos || 0);
 
 						msgSent++;
 						
@@ -128,9 +141,17 @@ async function startConnection(params, scriptHandler, index) {
 			// Subscribe
 			} else if (params.action === "subscribe") {
 
-				// Subscribe to topic
-				client.subscribe(params.topic, {
+				const topic = scriptHandler && scriptHandler.getSubscriptionTopic ? scriptHandler.getSubscriptionTopic(params) : {
+					topic: params.topic,
 					qos: params.qos
+				};
+
+				if (!topic || !topic.topic)
+					throw new Error("Topic and qos must be specified as a parameter or via custom script #getSubscriptionTopic() function.");
+
+				// Subscribe to topic
+				client.subscribe(topic.topic, {
+					qos: topic.qos
 				}, (err) => {
 				
 					console.log("Subscribed #%s:%d.", params.threadId, index);

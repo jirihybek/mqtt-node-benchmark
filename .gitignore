@@ -1,2 +1,3 @@
 node_modules
 .DS_Store
+/iot_test_script.js

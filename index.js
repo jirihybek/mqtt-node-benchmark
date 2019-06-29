@@ -24,7 +24,7 @@ parser.addArgument(
 	{
 		dest: "server",
 		help: "Server URL (eg.: mqtt://user:pass@test.mosquitto.org)",
-		required: true
+		defaultValue: null
 	}
 );
 
@@ -33,7 +33,7 @@ parser.addArgument(
 	{
 		dest: "topic",
 		help: "Topic",
-		required: true
+		defaultValue: null
 	}
 );
 
@@ -174,6 +174,7 @@ async function start(args) {
 			server: args.server,
 			topic: args.topic,
 			qos: args.qos,
+			script: args.script,
 			connections: Math.floor(args.sub_connections / args.sub_threads),
 			duration: args.duration,
 			threadId: "s" + i

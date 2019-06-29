@@ -12,17 +12,35 @@ usage: index.js [-h] [-v] -s SERVER -t TOPIC [-m MSG] [-q QOS] [-S SCRIPT]
 
 ### Custom Script
 
-You can use custom Node.js module to generate custom message payload.
+You can use custom Node.js module to generate custom server info, message params and subscription params.
 
 ```javascript
-module.exports = function() {
+module.exports = {
+	getServer: (_params) => {
 
-	// Returns random SenML
-	return JSON.stringify({
-		t: Date.now() / 1000,
-		v: Math.random()
-	});
+		return "mqtt://user:pass@test.mosquitto.org";
 
+	},
+	getMessage: (params) => {
+
+		return {
+			topic: params.topic + "/test" + Math.floor(Math.random() * 30),
+			qos: params.qos,
+			payload: JSON.stringify({
+				t: Date.now() / 1000,
+				v: Math.random()
+			})
+		}
+	
+	},
+	getSubscriptionTopic: (_params) => {
+	
+		return {
+			topic: params.topic + "/test" + Math.floor(Math.random() * 30),
+			qos: 2
+		};
+		
+	}
 };
 ```
 
